@@ -13,7 +13,7 @@ namespace PL
             //PL.Materia.Add();
             //PL.Materia.Update();
             //Menú
-            PL.Materia.GetById();
+            PL.Materia.GetAll();
         }
     }
 }

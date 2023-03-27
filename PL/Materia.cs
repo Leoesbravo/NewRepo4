@@ -23,7 +23,7 @@ namespace PL
             Console.WriteLine("Ingrese el costo de la materia");
             materia.Costo = decimal.Parse(Console.ReadLine());
 
-            ML.Result result= BL.Materia.Add(materia);
+            ML.Result result= BL.Materia.AddEF(materia);
 
             if (result.Correct)
             {
@@ -64,7 +64,7 @@ namespace PL
 
         public static void GetAll()
         {
-            ML.Result result=BL.Materia.GetAll();
+            ML.Result result=BL.Materia.GetAllEF();
 
             if(result.Correct)
             {
@@ -77,6 +77,7 @@ namespace PL
 
                 }
             }
+            Console.ReadKey();
             
         }
         public static void GetById()

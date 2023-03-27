@@ -280,5 +280,70 @@ namespace BL
 
 
         }
+        public static ML.Result AddEF(ML.Materia materia)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.LEscogidoNCapasMarzoEntities context = new DL.LEscogidoNCapasMarzoEntities())
+                {
+                   int RowsAffected = context.MateriaAdd(materia.Nombre,materia.Creditos, materia.Costo);
+
+                    if(RowsAffected > 0)
+                    {
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+            return result;
+        }
+        public static ML.Result GetAllEF()
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.LEscogidoNCapasMarzoEntities context = new DL.LEscogidoNCapasMarzoEntities())
+                {
+                    var query = context.MateriaGetAll();
+
+                    if (query != null)
+                    {
+                        result.Objects = new List<object>();
+
+                        foreach (var obj in query)
+                        {
+                            ML.Materia materia = new ML.Materia();
+                            materia.IdMateria = obj.IdMateria;
+                            materia.Nombre = obj.Nombre;
+                            materia.Creditos = obj.Creditos.Value;
+                            materia.Costo = obj.Costo.Value;
+                            result.Objects.Add(materia);
+                        }
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+            return result;
+        }
     }
 }
