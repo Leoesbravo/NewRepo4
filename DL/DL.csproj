@@ -78,6 +78,9 @@
       <DependentUpon>LEscogidoNCapasMarzo.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Semestre.cs">
+      <DependentUpon>LEscogidoNCapasMarzo.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="LEscogidoNCapasMarzo.edmx">

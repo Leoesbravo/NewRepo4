@@ -287,9 +287,9 @@ namespace BL
             {
                 using (DL.LEscogidoNCapasMarzoEntities context = new DL.LEscogidoNCapasMarzoEntities())
                 {
-                   int RowsAffected = context.MateriaAdd(materia.Nombre,materia.Creditos, materia.Costo);
-
-                    if(RowsAffected > 0)
+                   
+                    int filasAfectadas = context.MateriaAdd(materia.Nombre, materia.Creditos, materia.FechaRegistro, materia.Semestre.IdSemestre);
+                    if(filasAfectadas > 0)
                     {
                         result.Correct = true;
                     }
@@ -327,6 +327,8 @@ namespace BL
                             materia.Nombre = obj.Nombre;
                             materia.Creditos = obj.Creditos.Value;
                             materia.Costo = obj.Costo.Value;
+                            materia.Semestre = new ML.Semestre();
+                            materia.Semestre.IdSemestre = obj.IdSemestre;
                             result.Objects.Add(materia);
                         }
                         result.Correct = true;

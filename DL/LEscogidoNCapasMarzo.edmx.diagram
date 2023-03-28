@@ -6,6 +6,8 @@
     <edmx:Diagrams>
       <Diagram DiagramId="e433df602ea3424ab26acea372abdd79" Name="Diagram1">
         <EntityTypeShape EntityType="LEscogidoNCapasMarzoModel.Materia" Width="1.5" PointX="3.625" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LEscogidoNCapasMarzoModel.Semestre" Width="1.5" PointX="1.375" PointY="1.875" />
+        <AssociationConnector Association="LEscogidoNCapasMarzoModel.FK__Materia__IdSemes__164452B1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

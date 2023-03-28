@@ -13,11 +13,33 @@
           <Property Name="Nombre" Type="varchar" MaxLength="50" />
           <Property Name="Creditos" Type="tinyint" />
           <Property Name="Costo" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="FechaRegistro" Type="date" />
+          <Property Name="IdSemestre" Type="int" />
         </EntityType>
+        <EntityType Name="Semestre">
+          <Key>
+            <PropertyRef Name="IdSemestre" />
+          </Key>
+          <Property Name="IdSemestre" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK__Materia__IdSemes__164452B1">
+          <End Role="Semestre" Type="Self.Semestre" Multiplicity="0..1" />
+          <End Role="Materia" Type="Self.Materia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Semestre">
+              <PropertyRef Name="IdSemestre" />
+            </Principal>
+            <Dependent Role="Materia">
+              <PropertyRef Name="IdSemestre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="MateriaAdd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Nombre" Type="varchar" Mode="In" />
           <Parameter Name="Creditos" Type="tinyint" Mode="In" />
-          <Parameter Name="Costo" Type="decimal" Mode="In" />
+          <Parameter Name="FechaRegistro" Type="varchar" Mode="In" />
+          <Parameter Name="IdSemestre" Type="int" Mode="In" />
         </Function>
         <Function Name="MateriaGetAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="MateriaGetById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -25,6 +47,11 @@
         </Function>
         <EntityContainer Name="LEscogidoNCapasMarzoModelStoreContainer">
           <EntitySet Name="Materia" EntityType="Self.Materia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Semestre" EntityType="Self.Semestre" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Materia__IdSemes__164452B1" Association="Self.FK__Materia__IdSemes__164452B1">
+            <End Role="Semestre" EntitySet="Semestre" />
+            <End Role="Materia" EntitySet="Materia" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -38,31 +65,60 @@
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Creditos" Type="Byte" />
           <Property Name="Costo" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="FechaRegistro" Type="DateTime" Precision="0" />
+          <Property Name="IdSemestre" Type="Int32" />
+          <NavigationProperty Name="Semestre" Relationship="LEscogidoNCapasMarzoModel.FK__Materia__IdSemes__164452B1" FromRole="Materia" ToRole="Semestre" />
         </EntityType>
         <EntityContainer Name="LEscogidoNCapasMarzoEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Materias" EntityType="Self.Materia" />
-          <FunctionImport Name="MateriaGetAll" ReturnType="Collection(LEscogidoNCapasMarzoModel.MateriaGetAll_Result)" />
           <FunctionImport Name="MateriaGetById" ReturnType="Collection(LEscogidoNCapasMarzoModel.MateriaGetById_Result)">
           <Parameter Name="IdMateria" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="MateriaAdd">
             <Parameter Name="Nombre" Mode="In" Type="String" />
             <Parameter Name="Creditos" Mode="In" Type="Byte" />
-            <Parameter Name="Costo" Mode="In" Type="Decimal" />
+            <Parameter Name="FechaRegistro" Mode="In" Type="String" />
+            <Parameter Name="IdSemestre" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="MateriaGetAll" ReturnType="Collection(LEscogidoNCapasMarzoModel.MateriaGetAll_Result)" />
+          <EntitySet Name="Semestres" EntityType="LEscogidoNCapasMarzoModel.Semestre" />
+          <AssociationSet Name="FK__Materia__IdSemes__164452B1" Association="LEscogidoNCapasMarzoModel.FK__Materia__IdSemes__164452B1">
+            <End Role="Semestre" EntitySet="Semestres" />
+            <End Role="Materia" EntitySet="Materias" />
+          </AssociationSet>
         </EntityContainer>
-        <ComplexType Name="MateriaGetAll_Result">
-          <Property Type="Int32" Name="IdMateria" Nullable="false" />
-          <Property Type="String" Name="Nombre" Nullable="true" MaxLength="50" />
-          <Property Type="Byte" Name="Creditos" Nullable="true" />
-          <Property Type="Decimal" Name="Costo" Nullable="true" Precision="18" Scale="2" />
-        </ComplexType>
         <ComplexType Name="MateriaGetById_Result">
           <Property Type="Int32" Name="IdMateria" Nullable="false" />
           <Property Type="String" Name="Nombre" Nullable="true" MaxLength="50" />
           <Property Type="Byte" Name="Creditos" Nullable="true" />
           <Property Type="Decimal" Name="Costo" Nullable="true" Precision="18" Scale="2" />
         </ComplexType>
+        <ComplexType Name="MateriaGetAll_Result">
+          <Property Type="Int32" Name="IdMateria" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="true" MaxLength="50" />
+          <Property Type="Byte" Name="Creditos" Nullable="true" />
+          <Property Type="Decimal" Name="Costo" Nullable="true" Precision="18" Scale="2" />
+        </ComplexType>
+        <EntityType Name="Semestre">
+          <Key>
+            <PropertyRef Name="IdSemestre" />
+          </Key>
+          <Property Name="IdSemestre" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Materias" Relationship="LEscogidoNCapasMarzoModel.FK__Materia__IdSemes__164452B1" FromRole="Semestre" ToRole="Materia" />
+        </EntityType>
+        <Association Name="FK__Materia__IdSemes__164452B1">
+          <End Type="LEscogidoNCapasMarzoModel.Semestre" Role="Semestre" Multiplicity="0..1" />
+          <End Type="LEscogidoNCapasMarzoModel.Materia" Role="Materia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Semestre">
+              <PropertyRef Name="IdSemestre" />
+            </Principal>
+            <Dependent Role="Materia">
+              <PropertyRef Name="IdSemestre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -72,6 +128,8 @@
           <EntitySetMapping Name="Materias">
             <EntityTypeMapping TypeName="LEscogidoNCapasMarzoModel.Materia">
               <MappingFragment StoreEntitySet="Materia">
+                <ScalarProperty Name="IdSemestre" ColumnName="IdSemestre" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
                 <ScalarProperty Name="IdMateria" ColumnName="IdMateria" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Creditos" ColumnName="Creditos" />
@@ -79,16 +137,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="MateriaGetAll" FunctionName="LEscogidoNCapasMarzoModel.Store.MateriaGetAll">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="LEscogidoNCapasMarzoModel.MateriaGetAll_Result">
-                <ScalarProperty Name="IdMateria" ColumnName="IdMateria" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Creditos" ColumnName="Creditos" />
-                <ScalarProperty Name="Costo" ColumnName="Costo" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="MateriaGetById" FunctionName="LEscogidoNCapasMarzoModel.Store.MateriaGetById">
             <ResultMapping>
               <ComplexTypeMapping TypeName="LEscogidoNCapasMarzoModel.MateriaGetById_Result">
@@ -100,6 +148,24 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="MateriaAdd" FunctionName="LEscogidoNCapasMarzoModel.Store.MateriaAdd" />
+          <FunctionImportMapping FunctionImportName="MateriaGetAll" FunctionName="LEscogidoNCapasMarzoModel.Store.MateriaGetAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LEscogidoNCapasMarzoModel.MateriaGetAll_Result">
+                <ScalarProperty Name="IdMateria" ColumnName="IdMateria" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Creditos" ColumnName="Creditos" />
+                <ScalarProperty Name="Costo" ColumnName="Costo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Semestres">
+            <EntityTypeMapping TypeName="LEscogidoNCapasMarzoModel.Semestre">
+              <MappingFragment StoreEntitySet="Semestre">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdSemestre" ColumnName="IdSemestre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

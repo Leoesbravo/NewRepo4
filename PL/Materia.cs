@@ -20,8 +20,12 @@ namespace PL
             Console.WriteLine("Ingrese el número de créditos");
             materia.Creditos = byte.Parse(Console.ReadLine());
 
-            Console.WriteLine("Ingrese el costo de la materia");
-            materia.Costo = decimal.Parse(Console.ReadLine());
+            Console.WriteLine("Ingrese la fecha de la materia");
+            materia.FechaRegistro = Console.ReadLine();
+
+            Console.WriteLine("Ingrese el id del semestre de la materia");
+            materia.Semestre = new ML.Semestre(); //instancia
+            materia.Semestre.IdSemestre = int.Parse(Console.ReadLine());
 
             ML.Result result= BL.Materia.AddEF(materia);
 
@@ -74,6 +78,7 @@ namespace PL
                     Console.WriteLine("Nombre:" + materia.Nombre);
                     Console.WriteLine("Creditos:" + materia.Creditos);
                     Console.WriteLine("Costo:" + materia.Costo);
+                    Console.WriteLine("Costo:" + materia.Semestre.IdSemestre);
 
                 }
             }
