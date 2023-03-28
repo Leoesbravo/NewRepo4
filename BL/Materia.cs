@@ -329,6 +329,7 @@ namespace BL
                             materia.Costo = obj.Costo.Value;
                             materia.Semestre = new ML.Semestre();
                             materia.Semestre.IdSemestre = obj.IdSemestre;
+                            materia.Semestre.Nombre = obj.NombreSemestre;
                             result.Objects.Add(materia);
                         }
                         result.Correct = true;
