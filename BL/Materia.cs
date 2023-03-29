@@ -7,7 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 
 //using 1) Importar librerias
-     // 2) Garbage Collector
+// 2) Garbage Collector
 
 namespace BL
 {
@@ -46,15 +46,15 @@ namespace BL
                             //Estrutura de control -foreach 
                             if (tableMateria.Rows.Count > 0)
                             {
-                                    DataRow row = tableMateria.Rows[0];
+                                DataRow row = tableMateria.Rows[0];
 
-                                    ML.Materia materia = new ML.Materia();
-                                    materia.IdMateria = int.Parse(row[0].ToString());
-                                    materia.Nombre = row[1].ToString();
-                                    materia.Creditos = byte.Parse(row[2].ToString());
-                                    materia.Costo = decimal.Parse(row[3].ToString());
+                                ML.Materia materia = new ML.Materia();
+                                materia.IdMateria = int.Parse(row[0].ToString());
+                                materia.Nombre = row[1].ToString();
+                                materia.Creditos = byte.Parse(row[2].ToString());
+                                materia.Costo = decimal.Parse(row[3].ToString());
 
-                                    result.Object = materia; //boxing
+                                result.Object = materia; //boxing
 
                                 result.Correct = true;
                             }
@@ -84,14 +84,14 @@ namespace BL
                 {
                     string query = "MateriaGetAll";
 
-                        using (SqlCommand cmd = new SqlCommand())
-                        {
+                    using (SqlCommand cmd = new SqlCommand())
+                    {
 
-                            cmd.CommandText = query;
-                            cmd.Connection = context;
-                            cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandText = query;
+                        cmd.Connection = context;
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        using (SqlDataAdapter da = new SqlDataAdapter(cmd)) 
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                         {
 
                             DataTable tableMateria = new DataTable();
@@ -100,7 +100,7 @@ namespace BL
                             da.Fill(tableMateria);
 
                             //Estrutura de control -foreach 
-                            if(tableMateria.Rows.Count>0)
+                            if (tableMateria.Rows.Count > 0)
                             {
                                 //Instanciar lista
                                 result.Objects = new List<object>();
@@ -121,14 +121,14 @@ namespace BL
                                 result.Correct = false;
                                 result.ErrorMessage = "No existen registros sobre la tabla Materia";
                             }
- 
+
                         }
-                                      
+
                     }
 
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -190,10 +190,10 @@ namespace BL
                         cmd.Parameters.AddRange(collection);
 
                         cmd.Connection.Open();
-                    
+
                         int RowsAffected = cmd.ExecuteNonQuery(); //0 -no se insertó //>=1 se insertó
 
-                        if(RowsAffected >=1)
+                        if (RowsAffected >= 1)
                         {
                             result.Correct = true;
                         }
@@ -215,7 +215,7 @@ namespace BL
 
 
             return result;
-            
+
 
         }
 
@@ -287,9 +287,9 @@ namespace BL
             {
                 using (DL.LEscogidoNCapasMarzoEntities context = new DL.LEscogidoNCapasMarzoEntities())
                 {
-                   
+
                     int filasAfectadas = context.MateriaAdd(materia.Nombre, materia.Creditos, materia.FechaRegistro, materia.Semestre.IdSemestre);
-                    if(filasAfectadas > 0)
+                    if (filasAfectadas > 0)
                     {
                         result.Correct = true;
                     }
@@ -328,8 +328,8 @@ namespace BL
                             materia.Creditos = obj.Creditos.Value;
                             materia.Costo = obj.Costo.Value;
                             materia.Semestre = new ML.Semestre();
-                            materia.Semestre.IdSemestre = obj.IdSemestre;
-                            materia.Semestre.Nombre = obj.NombreSemestre;
+                            //materia.Semestre.IdSemestre = obj.IdSemestre;
+                            //materia.Semestre.Nombre = obj.NombreSemestre;
                             result.Objects.Add(materia);
                         }
                         result.Correct = true;
@@ -345,6 +345,92 @@ namespace BL
                 result.Correct = false;
                 result.ErrorMessage = ex.Message;
                 result.Ex = ex;
+            }
+            return result;
+        }
+
+        public static ML.Result AddLINQ(ML.Materia materia)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.LEscogidoNCapasMarzoEntities context = new DL.LEscogidoNCapasMarzoEntities())
+                {
+                    DL.Materia materiaEntity = new DL.Materia();
+
+                    materiaEntity.Nombre = materia.Nombre;
+                    materiaEntity.Creditos = materia.Creditos;
+                    materiaEntity.FechaRegistro = DateTime.ParseExact(materia.FechaRegistro, "dd-MM-yyyy", null);
+                    materiaEntity.IdSemestre = materia.Semestre.IdSemestre;
+
+                    context.Materias.Add(materiaEntity);
+
+                    var filasAfectadas = context.SaveChanges();
+
+                    if (filasAfectadas > 0)
+                    {
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+            return result;
+        }
+        public static ML.Result GetAllLINQ()
+        {
+            ML.Result result = new ML.Result();
+
+            try
+            {
+                using (DL.LEscogidoNCapasMarzoEntities context = new DL.LEscogidoNCapasMarzoEntities())
+                {
+                    var query = (from materia in context.Materias
+
+                                 select new { Nombre = materia.Nombre, 
+                                     Creditos = materia.Creditos,
+                                     Costo = materia.Costo,
+                                     FechaRegistro = materia.FechaRegistro,
+                                     IdSemestre = materia.IdSemestre});
+    
+                    result.Objects = new List<object>();
+
+                    if (query != null && query.ToList().Count > 0)
+                    {
+                        foreach (var obj in query)
+                        {
+                            ML.Materia materia = new ML.Materia();
+                            materia.Costo = obj.Costo.Value;
+                            materia.Nombre = obj.Nombre;
+                            materia.Creditos = obj.Creditos.Value;
+                            materia.FechaRegistro = obj.FechaRegistro.Value.ToString("dd-mm-yyyy");
+                            materia.Semestre = new ML.Semestre();
+                            materia.Semestre.IdSemestre = obj.IdSemestre.Value;
+
+                            result.Objects.Add(materia);
+                        }
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                        result.ErrorMessage = "No se encontraron registros";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
             }
             return result;
         }

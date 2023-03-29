@@ -27,7 +27,7 @@ namespace PL
             materia.Semestre = new ML.Semestre(); //instancia
             materia.Semestre.IdSemestre = int.Parse(Console.ReadLine());
 
-            ML.Result result= BL.Materia.AddEF(materia);
+            ML.Result result= BL.Materia.AddLINQ(materia);
 
             if (result.Correct)
             {
@@ -68,7 +68,7 @@ namespace PL
 
         public static void GetAll()
         {
-            ML.Result result=BL.Materia.GetAllEF();
+            ML.Result result=BL.Materia.GetAllLINQ();
 
             if(result.Correct)
             {
