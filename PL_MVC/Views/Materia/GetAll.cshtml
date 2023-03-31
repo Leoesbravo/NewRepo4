@@ -1,0 +1,58 @@
+﻿@model ML.Materia
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class=row>
+        <div class="text-center">
+            <h2>Materias</h2>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Seleccione una alumno para editarlo o + para agregar...</h5>
+            <hr />
+        </div>
+    </div>
+
+</div>
+
+<div style="float:right;">
+    @Html.ActionLink("+", "Form", "Usuario", htmlAttributes: new { @class = "btn btn-success" })
+</div>
+
+<br />
+<table class="table   table-hover table-bordered table-responsive">
+    <thead>
+        <tr class="table-secondary">
+            <td>Editar</td>
+            <td style="display :none;">id</td>
+            <td>Nombre</td>
+            <td>Apellido Paterno</td>
+            <td>Apellido Materno</td>
+            <td>Sexo</td>
+            <td>Semestre</td>
+            <td>Fecha de Nacimiento</td>
+            <td>Eliminar</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ML.Materia materia in Model.Materias)
+        {
+            <tr>
+                <td style="text-align: center; vertical-align: middle;"><a class="btn btn-warning glyphicon" href="@Url.Action("Form", "Usuario", new { IdAlumno = materia.IdMateria  })"><i class="bi bi-pencil-square" style="color: ivory"></i></a></td>
+                <td style="display :none;">@materia.IdMateria </td>
+                <td>@materia.Nombre</td>
+                <td>@materia.Creditos</td>
+                <td>@materia.Costo</td>
+
+                <td style="text-align: center; vertical-align: middle;"><a class="btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete", "Usuario", new { IdAlumno= materia.IdMateria})" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"><i class="bi bi-eraser-fill" style="color: mintcream"></i></a></td>
+            </tr>
+        }
+
+    </tbody>
+</table>
